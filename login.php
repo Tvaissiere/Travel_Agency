@@ -1,3 +1,38 @@
+<?php
+session_start();
+
+if (isset($_SESSION['user_id'])) {
+    header('Location: index.php');
+    exit;
+}
+
+require_once 'includes/connection.php';
+
+$error = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email    = trim($_POST['email']);
+    $password = $_POST['password'];
+
+    $stmt = $conn->prepare("SELECT id, first_name, password_hash FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->store_result();
+    $stmt->bind_result($id, $first_name, $password_hash);
+    $stmt->fetch();
+
+    if ($stmt->num_rows > 0 && password_verify($password, $password_hash)) {
+        $_SESSION['user_id']         = $id;
+        $_SESSION['user_first_name'] = $first_name;
+        header('Location: index.php');
+        exit;
+    } else {
+        $error = 'Invalid email or password.';
+    }
+
+    $stmt->close();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,14 +42,12 @@
 </head>
 <body>
 
-    <header>
-        <div>
-            <a href="login.php">Login</a>
-        </div>
-    </header>
-
     <main>
         <h1>Login</h1>
+
+        <?php if ($error): ?>
+            <p><?php echo $error; ?></p>
+        <?php endif; ?>
 
         <form action="login.php" method="POST">
 
