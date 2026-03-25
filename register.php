@@ -1,3 +1,45 @@
+<?php
+require_once 'includes/connection.php';
+
+$error = '';
+$success = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $first_name = trim($_POST['first_name']);
+    $last_name  = trim($_POST['last_name']);
+    $email      = trim($_POST['email']);
+    $phone      = trim($_POST['phone']);
+    $dob        = $_POST['dob'];
+    $password   = $_POST['password'];
+    $confirm    = $_POST['confirm_password'];
+
+    if ($password !== $confirm) {
+        $error = 'Passwords do not match.';
+    } else {
+        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $stmt->store_result();
+
+        if ($stmt->num_rows > 0) {
+            $error = 'An account with that email already exists.';
+        } else {
+            $password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+            $insert = $conn->prepare("INSERT INTO users (first_name, last_name, email, phone, date_of_birth, password_hash) VALUES (?, ?, ?, ?, ?, ?)");
+            $insert->bind_param("ssssss", $first_name, $last_name, $email, $phone, $dob, $password_hash);
+
+            if ($insert->execute()) {
+                $success = 'Account created successfully. <a href="login.php">Login here</a>.';
+            } else {
+                $error = 'Something went wrong. Please try again.';
+            }
+        }
+
+        $stmt->close();
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,6 +58,13 @@
     <main>
         <h1>Create an Account</h1>
 
+        <?php if ($error): ?>
+            <p><?php echo $error; ?></p>
+        <?php endif; ?>
+
+        <?php if ($success): ?>
+            <p><?php echo $success; ?></p>
+        <?php else: ?>
         <form action="register.php" method="POST">
 
             <div>
@@ -65,7 +114,7 @@
             </div>
 
         </form>
-
+        <?php endif; ?>
         <div>
             <a href="login.php">Already have an account? Login here</a>
         </div>
