@@ -8,8 +8,6 @@
 <body>
 
     <header>
-        
-
         <div>
             <a href="login.php">Login</a>
         </div>
@@ -47,4 +45,3 @@
 
 </body>
 </html>
-        
