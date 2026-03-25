@@ -3,7 +3,6 @@
     <button type="button" onclick="switchTab('hotels')" id="tab-hotels">Hotels</button>
     <button type="button" onclick="switchTab('packages')" id="tab-packages">Packages</button>
 </div>
-    
 <div id="form-flights">
     <form action="search_results.php" method="GET">
         <input type="hidden" name="type" value="flights">
@@ -48,7 +47,6 @@
     </form>
 </div>
 
-<!-- Hotels Form -->
 <div id="form-hotels" style="display:none;">
     <form action="search_results.php" method="GET">
         <input type="hidden" name="type" value="hotels">
