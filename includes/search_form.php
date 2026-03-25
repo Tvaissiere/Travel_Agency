@@ -67,8 +67,8 @@
         </div>
 
         <div>
-            <label for="guests">Guests</label>
-            <input type="number" id="guests" name="guests" value="1" min="1">
+            <label for="rooms">Rooms</label>
+            <input type="number" id="rooms" name="rooms" value="1" min="1">
         </div>
 
         <div> 

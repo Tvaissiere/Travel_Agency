@@ -53,7 +53,9 @@ if ($type === 'flights') {
 } elseif ($type === 'hotels') {
 
     $destination = trim($_GET['destination'] ?? '');
-    $guests      = max(1, (int)($_GET['guests'] ?? 1));
+    $rooms       = max(1, (int)($_GET['rooms'] ?? 1));
+    $check_in    = $_GET['check_in']  ?? '';
+    $check_out   = $_GET['check_out'] ?? '';
 
     $sql    = "SELECT * FROM hotels WHERE rooms_available > 0";
     $params = [];
@@ -153,7 +155,7 @@ if ($type === 'flights') {
                         <p>Arrives: <?php echo date('D d M Y, H:i', strtotime($flight['arrival_datetime'])); ?></p>
                         <p>Seats available: <?php echo $flight['seats_available']; ?></p>
                         <p>Price: &pound;<?php echo number_format($flight['price'], 2); ?> per person</p>
-                        <a href="book.php?type=flight&id=<?php echo $flight['id']; ?>">Book Now</a>
+                        <a href="book.php?type=flight&id=<?php echo $flight['id']; ?>&trip_type=<?php echo urlencode($trip_type); ?>&passengers=<?php echo $passengers; ?>&from=<?php echo urlencode($from); ?>&to=<?php echo urlencode($to); ?>&return_date=<?php echo urlencode($return); ?>">Book Now</a>
                     </div>
                     <hr>
                 <?php endforeach; ?>
@@ -175,7 +177,6 @@ if ($type === 'flights') {
                             <p>Arrives: <?php echo date('D d M Y, H:i', strtotime($flight['arrival_datetime'])); ?></p>
                             <p>Seats available: <?php echo $flight['seats_available']; ?></p>
                             <p>Price: &pound;<?php echo number_format($flight['price'], 2); ?> per person</p>
-                            <a href="book.php?type=flight&id=<?php echo $flight['id']; ?>">Book Now</a>
                         </div>
                         <hr>
                     <?php endforeach; ?>
@@ -190,7 +191,7 @@ if ($type === 'flights') {
                     <p>Stars: <?php echo str_repeat('★', $hotel['star_rating']); ?></p>
                     <p>Rooms available: <?php echo $hotel['rooms_available']; ?></p>
                     <p>Price: &pound;<?php echo number_format($hotel['price_per_night'], 2); ?> per night</p>
-                    <a href="book.php?type=hotel&id=<?php echo $hotel['id']; ?>">Book Now</a>
+                    <a href="book.php?type=hotel&id=<?php echo $hotel['id']; ?>&rooms=<?php echo $rooms; ?>&check_in=<?php echo urlencode($check_in); ?>&check_out=<?php echo urlencode($check_out); ?>">Book Now</a>
                 </div>
                 <hr>
             <?php endforeach; ?>

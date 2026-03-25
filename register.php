@@ -49,12 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 
-    <header>
-        <div>
-            <a href="login.php">Login</a>
-        </div>
-    </header>
-
     <main>
         <h1>Create an Account</h1>
 
